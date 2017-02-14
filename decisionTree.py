@@ -26,7 +26,6 @@ def reader(filename):
                     types = types[pos+1:len(types)]
                     pos = types.find(',')
                 counterAttr = counterAttr+1
-
             else:
                 word = word+","
                 data = {}
@@ -38,60 +37,9 @@ def reader(filename):
                             data[counterData].append((attributes[i][0],a))
                         except:
                             data[counterData] = [(attributes[i][0],a)]
-
-
                         word = word[pos+1:len(word)]
                 counterData = counterData+1
-
-
-
-
-
-
     return attributes,data
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Algorithm
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
