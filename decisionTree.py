@@ -3,6 +3,7 @@ import regex as re
 """Reader. reads in ARFF-file"""
 def reader(filename):
     attributes = {}
+    data = {}
     file = open(filename)
     input = file.read().lower()
     inputLines = re.finditer('(.*\n)', input)
@@ -29,7 +30,7 @@ def reader(filename):
                 counterAttr = counterAttr+1
             else:
                 word = word+","
-                data = {}
+
                 for i in range(0,len(attributes.keys())):
                     pos = word.find(',')
                     if(pos != -1):
@@ -38,14 +39,40 @@ def reader(filename):
                             data[counterData].append((attributes[i][0],a))
                         except:
                             data[counterData] = [(attributes[i][0],a)]
-                        word = word[pos+1:len(word)]
+                    word = word[pos+1:len(word)]
                 counterData = counterData+1
+
+
     return attributes,data
 
-
 """Algorithm for Decision Tree"""
+
+def same_class(examples):
+    nbr_yes = 0
+    nbr_no = 0
+    for key in examples.keys():
+        values = examples.get(key)
+        indexLast = len(values)
+        if values[indexLast-1][1] == 'yes':
+            nbr_yes = nbr_yes + 1
+        else:
+            nbr_no = nbr_no + 1
+    if nbr_no == 0 or nbr_yes == 0:
+        return True
+    return False
+
+def importance(attributes):
+    #print("do something")
+    return attributes[0][0]
+
+def plurality_value(examples):
+    #print("do something")
+    i = len(examples.get(0))
+    return examples[0][i-1]
+
+
 def decision_tree_algorithm(examples, attributes,parent_examples):
-	"""if examples.empty
+    """if examples.empty
 			return plurality_value(parent_examples)
 		else if all examples have samma classification
 			return
@@ -58,18 +85,26 @@ def decision_tree_algorithm(examples, attributes,parent_examples):
 				exs = [e of examples ^ e.A = v_k]
 				subtree = decision_tree_algorithm(exs, attributes-A,examples)
 				add branch to tree with label (A=v_k) and subtree "subtree"
-		return tree
-	"""
+		return tree"""
+    if not examples:
+        #no more data
+        return plurality_value(parent_examples)
+    elif same_class(examples):
+        #alla kvarvarande exempel har samma resultat
+        i = len(examples.get(0))
+        return examples[0][i-1]
+    elif not attributes:
+        #no more attributes
+        return plurality_value(examples)
+    else:
+        a = importance(attributes)
 
 
-def importance(attributes):
-
-def plurality_value(examples):
 
 
 if __name__ == '__main__':
     #column_names = ['Alternative', 'Bar', 'Fri/Sat', 'Hungry', 'Patrons',
     #'Price', 'Raining', 'Reservation', 'Type', 'WaitEstimate']
     filename = 'input_withRes.arff'
-    attribute, data = reader(filename)
-    decision_tree_algorithm(data, attribute, data)
+    attributes, data = reader(filename)
+    decision_tree_algorithm(data, attributes, data)
