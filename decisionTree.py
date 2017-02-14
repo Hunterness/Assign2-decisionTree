@@ -68,7 +68,7 @@ def importance(attributes):
 def plurality_value(examples):
     #print("do something")
     i = len(examples.get(0))
-    return examples[0][i-1]
+    return examples[0][i-1][1] #returnerar yes/no
 
 
 def decision_tree_algorithm(examples, attributes,parent_examples):
@@ -89,10 +89,10 @@ def decision_tree_algorithm(examples, attributes,parent_examples):
     if not examples:
         #no more data
         return plurality_value(parent_examples)
-    elif same_class(examples):
+    elif True:#same_class(examples):
         #alla kvarvarande exempel har samma resultat
         i = len(examples.get(0))
-        return examples[0][i-1]
+        return examples[0][i-1][1] #returnerar yes/no
     elif not attributes:
         #no more attributes
         return plurality_value(examples)
