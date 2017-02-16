@@ -95,7 +95,7 @@ def decision_tree_algorithm(examples, attributes,parent_examples):
 		return tree"""
     if not examples:
         #no more data
-        print("no more data")
+        #print("no more data")
         return ": " + plurality_value(parent_examples) + "\n"
     elif same_class(examples):#Funkar inte att fånga???
         #alla kvarvarande exempel har samma resultat
@@ -103,7 +103,7 @@ def decision_tree_algorithm(examples, attributes,parent_examples):
         return ": " + examples[0][-1][1] + "\n" #returnerar yes/no
     elif not attributes:
         #no more attributes
-        print("no more attributes")
+        #print("no more attributes")
         return ": " + plurality_value(examples) + "\n"
     else:
         a = importance(attributes)
@@ -111,7 +111,7 @@ def decision_tree_algorithm(examples, attributes,parent_examples):
         i = attributes[a][0]
         for v in attributes[a][1:len(attributes[a])]:
             tree = tree + a + " = "
-            tree = tree + v + "\n"
+            tree = tree + v + "\n\t"
             exs = []
             for j in range(len(examples)):
                 res = examples[j][i][1]
