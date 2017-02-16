@@ -1,4 +1,5 @@
 import regex as re
+from collections import OrderedDict
 
 """Reader. reads in ARFF-file"""
 def reader(filename):
@@ -41,9 +42,13 @@ def reader(filename):
                             data[counterData] = [(attributes[i][0],a)]
                     word = word[pos+1:len(word)]
                 counterData = counterData+1
-
-
-    return attributes,data
+    attributesNew = OrderedDict()
+    for attr in attributes:
+        try:
+            attributesNew[attributes[attr][0]].append(attributes[attr][1:len(attributes)])
+        except:
+            attributesNew[attributes[attr][0]] = attributes[attr][1:len(attributes)]
+    return attributesNew,data
 
 """Algorithm for Decision Tree"""
 
@@ -61,9 +66,13 @@ def same_class(examples):
         return True
     return False
 
-def importance(attributes):
-    #print("do something")
-    return attributes[0][0]
+def importance(attributes): #just nu bara första attributet
+    attr = list(attributes.keys())[0]
+    if(attr != "willwait"):
+        return attr
+    else:
+        return list(attributes.keys())[1]
+
 
 def plurality_value(examples):
     #print("do something")
@@ -88,16 +97,25 @@ def decision_tree_algorithm(examples, attributes,parent_examples):
 		return tree"""
     if not examples:
         #no more data
-        return plurality_value(parent_examples)
+        return ": " + plurality_value(parent_examples)
     elif same_class(examples):
         #alla kvarvarande exempel har samma resultat
         i = len(examples.get(0))
-        return examples[0][i-1][1] #returnerar yes/no
+        return ": " + examples[0][i-1][1] #returnerar yes/no
     elif not attributes:
         #no more attributes
-        return plurality_value(examples)
+        return ": " + plurality_value(examples)
     else:
         a = importance(attributes)
+        tree = a + " = "
+        #value = attributes[attribute][0]
+        #tree = tree + value + "\n"
+
+        #subtree = decision_tree_algorithm()
+        #tree = tree + subtree
+
+
+        return tree
 
 
 
@@ -107,4 +125,5 @@ if __name__ == '__main__':
     #'Price', 'Raining', 'Reservation', 'Type', 'WaitEstimate']
     filename = 'input_withRes.arff'
     attributes, data = reader(filename)
-    decision_tree_algorithm(data, attributes, data)
+    tree = decision_tree_algorithm(data, attributes, data)
+    print(tree)
