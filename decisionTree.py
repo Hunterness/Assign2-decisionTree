@@ -42,23 +42,26 @@ def reader(filename):
                             data[counterData] = [(attributes[i][0],a)]
                     word = word[pos+1:len(word)]
                 counterData = counterData+1
+
     attributesNew = OrderedDict()
     for attr in attributes:
         try:
             attributesNew[attributes[attr][0]].append(attributes[attr][1:len(attributes)])
         except:
-            attributesNew[attributes[attr][0]] = attributes[attr][1:len(attributes)]
-    return attributesNew,data
+            attributesNew[attributes[attr][0]] = [attr]+ attributes[attr][1:len(attributes)]
+    i = len(data)
+    dataNew = []
+    for j in range(i):
+        dataNew.append(data[j])
+    return attributesNew,dataNew
 
 """Algorithm for Decision Tree"""
 
 def same_class(examples):
     nbr_yes = 0
     nbr_no = 0
-    for key in examples.keys():
-        values = examples.get(key)
-        indexLast = len(values)
-        if values[indexLast-1][1] == 'yes':
+    for e in examples:
+        if e[-1][1] == 'yes':
             nbr_yes = nbr_yes + 1
         else:
             nbr_no = nbr_no + 1
@@ -68,16 +71,11 @@ def same_class(examples):
 
 def importance(attributes): #just nu bara första attributet
     attr = list(attributes.keys())[0]
-    if(attr != "willwait"):
-        return attr
-    else:
-        return list(attributes.keys())[1]
+    return attr
 
 
-def plurality_value(examples):
-    #print("do something")
-    i = len(examples.get(0))
-    return examples[0][i-1][1] #returnerar yes/no
+def plurality_value(examples): #just nu bara första exemplet?
+    return examples[0][-1][1] #returnerar yes/no
 
 
 def decision_tree_algorithm(examples, attributes,parent_examples):
@@ -97,22 +95,36 @@ def decision_tree_algorithm(examples, attributes,parent_examples):
 		return tree"""
     if not examples:
         #no more data
-        return ": " + plurality_value(parent_examples)
-    elif same_class(examples):
+        print("no more data")
+        return ": " + plurality_value(parent_examples) + "\n"
+    elif same_class(examples):#Funkar inte att fånga???
         #alla kvarvarande exempel har samma resultat
-        i = len(examples.get(0))
-        return ": " + examples[0][i-1][1] #returnerar yes/no
+        print("same class")
+        return ": " + examples[0][-1][1] + "\n" #returnerar yes/no
     elif not attributes:
         #no more attributes
-        return ": " + plurality_value(examples)
+        print("no more attributes")
+        return ": " + plurality_value(examples) + "\n"
     else:
         a = importance(attributes)
-        tree = a + " = "
-        #value = attributes[attribute][0]
-        #tree = tree + value + "\n"
+        tree = ""
+        i = attributes[a][0]
+        for v in attributes[a][1:len(attributes[a])]:
+            tree = tree + a + " = "
+            tree = tree + v + "\n"
+            exs = []
+            for j in range(len(examples)):
+                res = examples[j][i][1]
+                if res == v:
+                    exs.append(examples[j])
 
-        #subtree = decision_tree_algorithm()
-        #tree = tree + subtree
+            att = OrderedDict()
+            for at in attributes:
+                if at != a:
+                    att[at] = attributes[a]
+
+            subtree = decision_tree_algorithm(exs, att, examples)
+            tree = tree + subtree
 
 
         return tree
