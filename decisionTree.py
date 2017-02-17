@@ -190,7 +190,7 @@ if __name__ == '__main__':
             for k in range(treePrint[i][1]):
                 printout = printout + "\t"
             printout = printout + treePrint[i][0] + "\n"
-
+    printout = printout + treePrint[-1][0]
     print(printout)
 
 
@@ -210,4 +210,5 @@ if __name__ == '__main__':
             for k in range(treePrint[i][1]):
                 printout = printout + "\t"
             printout = printout + treePrint[i][0] + "\n"
+    printout = printout + treePrint[-1][0]
     print(printout)
